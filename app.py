@@ -5,7 +5,7 @@ from functools import wraps
 import cloudinary
 import cloudinary.uploader
 from flask import (Flask, render_template, request, redirect,
-                   url_for, session, flash, jsonify)
+                   url_for, session, flash, jsonify, send_from_directory)
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # Use PostgreSQL on Render (DATABASE_URL set), SQLite locally
@@ -444,8 +444,34 @@ def download_pdf(listing_id):
         cur.execute("SELECT * FROM listings WHERE id=%s", (listing_id,))
         listing = cur.fetchone()
     if listing and listing["pdf_file"]:
-        # Cloudinary URL — redirect directly to it
-        return redirect(listing["pdf_file"])
+        pdf_url = listing["pdf_file"]
+        # Make the filename strictly safe for URL segments (no spaces)
+        file_name_safe = listing["title"].replace(" ", "_")
+        file_name_safe = "".join(c for c in file_name_safe if c.isalnum() or c == "_")
+        if not file_name_safe:
+            file_name_safe = "download"
+        
+        if "res.cloudinary.com" in pdf_url:
+            import urllib.request
+            try:
+                req = urllib.request.Request(pdf_url, headers={'User-Agent': 'Mozilla/5.0'})
+                with urllib.request.urlopen(req) as response:
+                    file_data = response.read()
+                return app.response_class(
+                    file_data,
+                    headers={"Content-Disposition": f"attachment; filename={file_name_safe}.pdf"},
+                    mimetype="application/pdf"
+                )
+            except Exception as e:
+                return redirect(pdf_url)
+                
+        elif pdf_url.startswith("/static/"):
+            directory = os.path.join(app.root_path, "static/uploads")
+            filename = os.path.basename(pdf_url)
+            return send_from_directory(directory, filename, as_attachment=True, download_name=f"{file_name_safe}.pdf")
+            
+        return redirect(pdf_url)
+        
     flash("No PDF available.", "error")
     return redirect(url_for("listing_detail", listing_id=listing_id))
 
