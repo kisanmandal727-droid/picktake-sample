@@ -1,0 +1,238 @@
+/* ═══════════════════════════════════════
+   LISTING DETAIL — 3D Product View
+═══════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+.listing-detail-container {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 0 30px 60px;
+  animation: listingFadeIn 0.5s ease both;
+}
+@keyframes listingFadeIn {
+  from { opacity: 0; transform: perspective(800px) translateY(24px) rotateX(4deg); }
+  to   { opacity: 1; transform: perspective(800px) translateY(0) rotateX(0deg); }
+}
+
+.back-link {
+  display: inline-flex; align-items: center; gap: 7px;
+  color: var(--accent); text-decoration: none;
+  font-size: 14px; font-weight: 500; margin-bottom: 24px;
+  transition: all 0.2s;
+  padding: 6px 12px; border-radius: 8px;
+}
+.back-link:hover {
+  background: var(--accent-light);
+  transform: translateX(-4px);
+}
+
+.listing-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 40px; align-items: start;
+  perspective: 1000px;
+}
+@media (max-width: 768px) { .listing-grid { grid-template-columns: 1fr; } }
+
+/* ── 3D Image Box ── */
+.listing-image-box {
+  position: relative;
+  background: var(--surface2);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.08);
+  transform-style: preserve-3d;
+  transition: all 0.4s cubic-bezier(0.34, 1.2, 0.64, 1);
+  will-change: transform;
+}
+.listing-image-box:hover {
+  transform: perspective(800px) rotateY(-3deg) rotateX(2deg) translateZ(12px);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(37,99,235,0.08);
+}
+.listing-image-box img {
+  width: 100%; display: block;
+  max-height: 420px; object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.listing-image-box:hover img { transform: scale(1.03); }
+
+.sold-banner {
+  position: absolute; top: 16px; left: 16px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff; font-weight: 700; font-size: 12px;
+  padding: 6px 16px; border-radius: 24px; letter-spacing: 0.5px;
+  box-shadow: 0 4px 16px rgba(239,68,68,0.4);
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 4px 16px rgba(239,68,68,0.4); }
+  50%      { box-shadow: 0 4px 24px rgba(239,68,68,0.6); }
+}
+
+/* ── Listing Info ── */
+.listing-info {
+  display: flex; flex-direction: column; gap: 18px;
+  animation: infoSlideIn 0.5s ease 0.15s both;
+}
+@keyframes infoSlideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Tags */
+.tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.tag-category {
+  background: var(--accent-light); color: var(--accent);
+  font-size: 12px; font-weight: 600; padding: 5px 14px;
+  border-radius: 20px; border: 1px solid rgba(37,99,235,0.15);
+  transition: all 0.2s;
+}
+.tag-category:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(37,99,235,0.15); }
+.tag-digital {
+  background: var(--green-light); color: var(--green);
+  font-size: 12px; padding: 5px 14px;
+  border-radius: 20px; border: 1px solid rgba(16,185,129,0.2);
+}
+
+.listing-info h1 {
+  color: var(--text); font-size: 28px; font-weight: 700;
+  margin: 0; line-height: 1.2;
+  font-family: 'Playfair Display', serif;
+}
+.detail-price {
+  color: var(--orange); font-size: 28px; font-weight: 700; margin: 0;
+  font-family: 'Playfair Display', serif;
+  text-shadow: 0 2px 8px rgba(249,115,22,0.15);
+}
+.detail-desc { color: var(--text2); font-size: 15px; line-height: 1.7; margin: 0; }
+
+/* ── PDF Box (3D Card) ── */
+.pdf-box {
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 16px; padding: 18px 22px; gap: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  transition: all 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+.pdf-box:hover {
+  transform: perspective(600px) rotateX(-2deg) translateZ(8px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+}
+.pdf-info { display: flex; align-items: center; gap: 12px; }
+.pdf-icon { font-size: 28px; color: var(--red); filter: drop-shadow(0 2px 4px rgba(239,68,68,0.3)); }
+.pdf-info strong { color: var(--text); font-size: 14px; }
+.pdf-info p { color: var(--text3); font-size: 12px; margin: 3px 0 0; }
+
+.download-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff;
+  padding: 11px 20px; border-radius: 10px;
+  text-decoration: none; font-size: 14px; font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(37,99,235,0.3);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.download-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 10px 32px rgba(37,99,235,0.4);
+}
+
+/* ── Seller Box (Glass Card) ── */
+.seller-box {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 16px; padding: 20px 22px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  transition: all 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+.seller-box:hover {
+  transform: perspective(600px) rotateX(-2deg) translateZ(8px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+}
+.seller-box h4 { color: var(--text); margin: 0 0 14px; font-size: 14px; font-weight: 600; }
+.seller-row { display: flex; align-items: center; gap: 12px; }
+.seller-avatar {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff; font-weight: 700; font-size: 18px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(37,99,235,0.25);
+  transition: transform 0.3s ease;
+}
+.seller-avatar:hover { transform: scale(1.08) rotate(-3deg); }
+.seller-name { color: var(--text); font-weight: 600; font-size: 15px; }
+.seller-college { color: var(--text3); font-size: 12px; margin: 2px 0 0; }
+
+.chat-seller-btn {
+  margin-left: auto;
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--accent-light); color: var(--accent);
+  border: 1.5px solid rgba(37,99,235,0.2);
+  padding: 9px 18px; border-radius: 10px;
+  text-decoration: none; font-size: 13px; font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.chat-seller-btn:hover {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff; border-color: transparent;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 24px rgba(37,99,235,0.3);
+}
+
+/* ── Owner Actions ── */
+.owner-actions { display: flex; gap: 14px; }
+.btn-sold, .btn-delete {
+  flex: 1; padding: 14px; border: none; border-radius: 12px;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+.btn-sold {
+  background: linear-gradient(135deg, #10b981, #059669); color: #fff;
+  box-shadow: 0 4px 16px rgba(16,185,129,0.3);
+}
+.btn-sold:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 32px rgba(16,185,129,0.4); }
+.btn-delete {
+  background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff;
+  box-shadow: 0 4px 16px rgba(239,68,68,0.3);
+}
+.btn-delete:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 32px rgba(239,68,68,0.4); }
+
+/* ── Report ── */
+.report-box { margin-top: 4px; }
+.report-toggle {
+  background: none; border: none; color: var(--text3);
+  font-size: 13px; cursor: pointer; padding: 4px 0; transition: color 0.2s;
+}
+.report-toggle:hover { color: var(--red); }
+#reportForm { margin-top: 10px; display: flex; gap: 10px; align-items: center; }
+#reportForm select {
+  flex: 1; padding: 10px 14px; border-radius: 10px;
+  border: 1.5px solid var(--border); background: var(--surface2);
+  color: var(--text); font-size: 13px; outline: none;
+  transition: all 0.2s;
+}
+#reportForm select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+.btn-report-submit {
+  padding: 10px 18px; background: var(--red-light); color: var(--red);
+  border: 1.5px solid #fecaca; border-radius: 10px;
+  font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.btn-report-submit:hover {
+  background: var(--red); color: #fff; border-color: transparent;
+  transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239,68,68,0.25);
+}
+.hidden { display: none !important; }
+
+@media (max-width: 768px) {
+  .listing-detail-container { padding: 16px 16px 40px; }
+  .listing-grid { grid-template-columns: 1fr; gap: 24px; }
+  .owner-actions { flex-direction: column; }
+  .btn-sold, .btn-delete { width: 100%; }
+}

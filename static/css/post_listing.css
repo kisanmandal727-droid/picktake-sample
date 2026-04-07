@@ -1,0 +1,98 @@
+/* ═══════════════════════════════════════
+   POST LISTING — 3D Glass Form
+═══════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+.listing-container {
+  width: 680px; max-width: 95%;
+  margin: 36px auto 60px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  padding: 40px 44px;
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.9);
+  box-shadow:
+    0 8px 40px rgba(0,0,0,0.08),
+    0 0 0 1px rgba(255,255,255,0.6) inset;
+  transform-style: preserve-3d;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  animation: postFadeIn 0.5s ease both;
+}
+@keyframes postFadeIn {
+  from { opacity: 0; transform: perspective(800px) translateY(24px) rotateX(4deg); }
+  to   { opacity: 1; transform: perspective(800px) translateY(0) rotateX(0deg); }
+}
+
+.listing-container:hover {
+  transform: perspective(800px) rotateX(-1deg) translateY(-2px);
+  box-shadow:
+    0 16px 56px rgba(0,0,0,0.1),
+    0 0 0 1px rgba(255,255,255,0.6) inset;
+}
+
+.listing-container h2 {
+  color: var(--text); font-size: 24px; font-weight: 700; margin-bottom: 4px;
+  font-family: 'Playfair Display', serif;
+}
+.subtitle { font-size: 14px; color: var(--text3); margin-bottom: 28px; }
+
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-bottom: 18px; color: var(--accent);
+  text-decoration: none; font-size: 14px; font-weight: 500;
+  padding: 6px 12px; border-radius: 8px;
+  transition: all 0.2s;
+}
+.back-link:hover { background: var(--accent-light); transform: translateX(-4px); }
+
+label {
+  display: block; margin-top: 20px;
+  font-size: 13px; font-weight: 600;
+  color: var(--text2); letter-spacing: 0.3px;
+}
+
+input, textarea, select {
+  width: 100%; padding: 13px 16px; margin-top: 6px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(0,0,0,0.08);
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(8px);
+  color: var(--text);
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.25s ease; box-sizing: border-box;
+}
+input::placeholder, textarea::placeholder { color: var(--text3); }
+input:focus, textarea:focus, select:focus {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.1), 0 4px 16px rgba(37,99,235,0.08);
+  background: #fff;
+  transform: translateY(-1px);
+}
+select option { background: #fff; color: var(--text); }
+textarea { min-height: 120px; resize: vertical; }
+
+.row { display: flex; gap: 20px; }
+.row > div { flex: 1; }
+
+.post-btn-submit {
+  margin-top: 28px; width: 100%; padding: 15px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none; color: #fff;
+  font-size: 15px; font-weight: 600; border-radius: 12px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  box-shadow: 0 6px 24px rgba(37,99,235,0.35), 0 1px 0 rgba(255,255,255,0.15) inset;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.post-btn-submit:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 14px 40px rgba(37,99,235,0.45);
+}
+.post-btn-submit:active { transform: translateY(0) scale(0.99); }
+
+@media (max-width: 768px) {
+  .listing-container { padding: 24px 20px; margin: 16px; width: auto; border-radius: 18px; }
+  .row { flex-direction: column; gap: 0; }
+}

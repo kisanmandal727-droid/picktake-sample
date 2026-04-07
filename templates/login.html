@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Pick&amp;Take</title>
+  <meta name="description" content="Sign in to Pick&Take, the trusted college marketplace in Pune.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Animated Floating Orbs -->
+<div style="position:fixed;inset:0;pointer-events:none;z-index:0;">
+  <div style="position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,0.1),transparent);top:-80px;left:-100px;animation:orbFloat 10s ease-in-out infinite;"></div>
+  <div style="position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(249,115,22,0.08),transparent);bottom:-60px;right:-60px;animation:orbFloat 12s ease-in-out infinite reverse;"></div>
+</div>
+<style>
+  @keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(20px, -30px) scale(1.05); }
+  }
+</style>
+
+<div class="auth-container">
+  <div class="logo">📘 <span>Pick&amp;Take</span></div>
+
+  <div class="card">
+    <h2>Welcome Back!</h2>
+    <p class="subtitle">Sign in to continue to your account.</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for cat, msg in messages %}
+        <p class="flash-msg flash-{{ cat }}">{{ msg }}</p>
+      {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+      <div>
+        <label>Email</label>
+        <input type="email" name="email" placeholder="name@example.com" required id="loginEmail">
+      </div>
+
+      <div>
+        <label>Password</label>
+        <div class="password-box">
+          <input type="password" name="password" id="pwd" required>
+          <button type="button" class="eye-btn" onclick="togglePwd()" tabindex="-1">
+            <i class="fa fa-eye" id="eyeIcon"></i>
+          </button>
+        </div>
+      </div>
+
+      <button class="btn" type="submit" id="loginBtn">
+        <i class="fa fa-arrow-right-to-bracket"></i> Login
+      </button>
+    </form>
+
+    <p class="switch">
+      Don't have an account? <a href="{{ url_for('signup') }}">Sign up</a>
+    </p>
+  </div>
+</div>
+
+<script>
+  function togglePwd() {
+    const p = document.getElementById("pwd");
+    const i = document.getElementById("eyeIcon");
+    if (p.type === "password") {
+      p.type = "text";
+      i.className = "fa fa-eye-slash";
+    } else {
+      p.type = "password";
+      i.className = "fa fa-eye";
+    }
+  }
+
+  /* ── 3D Card Tilt on Mouse ── */
+  const card = document.querySelector('.card');
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    card.style.transform = `perspective(800px) rotateX(${-y * 8}deg) rotateY(${x * 8}deg) translateZ(6px)`;
+    card.style.transition = 'transform 0.1s ease';
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateZ(0)';
+    card.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.2, 0.64, 1)';
+  });
+</script>
+</body>
+</html>

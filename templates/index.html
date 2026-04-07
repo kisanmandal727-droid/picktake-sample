@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Pick&Take{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="search-box">
+  <form class="search-form" method="GET" action="{{ url_for('search_results') }}" id="searchForm">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search books, items or users..." id="searchInput">
+    <button type="submit" id="searchBtn"><i class="fa fa-search"></i></button>
+  </form>
+</div>
+
+<div class="categories">
+  {% set cat_slugs = [("📚 Books","books"),("📝 Notes","notes"),("💻 Electronics","electronics"),("✏️ Stationery","stationery"),("🔬 Lab Equipments","lab")] %}
+  {% for label, slug in cat_slugs %}
+    <a class="category" href="{{ url_for('category', slug=slug) }}">{{ label }}</a>
+  {% endfor %}
+</div>
+
+<div class="recent">
+  <h2>Recent Listings
+    {% if user_college %}
+      <span style="font-size:13px;font-weight:500;color:var(--text3);margin-left:10px;">
+        <i class="fa fa-building" style="color:var(--accent)"></i> {{ user_college }}
+      </span>
+    {% endif %}
+  </h2>
+  <div class="cards" id="listingCards">
+    {% if listings %}
+      {% for l in listings %}
+        <div class="card" data-id="{{ l.id }}" data-href="{{ url_for('listing_detail', listing_id=l.id) }}">
+          <div class="card-img">
+            {% if l.image %}
+              <img src="{{ l.image }}" alt="{{ l.title }}"
+                   onerror="this.src='https://placehold.co/300x175/eff6ff/2563eb?text=No+Image'">
+            {% else %}
+              <img src="https://placehold.co/300x175/eff6ff/2563eb?text=No+Image" alt="{{ l.title }}">
+            {% endif %}
+            <i class="fa fa-heart fav-icon {% if l.id in fav_ids %}active{% endif %}"
+               onclick="event.stopPropagation()"></i>
+            {% if l.sold %}<div class="sold-tag">SOLD</div>{% endif %}
+          </div>
+          <div class="card-body">
+            <span class="category-tag">{{ l.category }}</span>
+            <h3>{{ l.title }}</h3>
+            <p class="price">₹{{ l.price }}</p>
+            <p class="uploaded">by <a href="{{ url_for('public_profile', username=l.username) }}" onclick="event.stopPropagation()" style="color:var(--accent);text-decoration:none;font-weight:600;">{{ l.username }}</a></p>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--text3);">
+        <i class="fa fa-box-open" style="font-size:40px;display:block;margin-bottom:12px;color:var(--border2);"></i>
+        No listings found.
+      </p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/favourites.js') }}"></script>
+<script>
+  /* ── Click navigation from data-href ── */
+  document.querySelectorAll('#listingCards .card[data-href]').forEach(card => {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', () => { location.href = card.dataset.href; });
+  });
+
+  /* ── Staggered card entry animation ── */
+  document.querySelectorAll('#listingCards .card').forEach((card, i) => {
+    card.style.opacity = '0';
+    card.style.transform = 'perspective(600px) translateY(30px) rotateX(6deg)';
+    card.style.transition = 'all 0.5s cubic-bezier(0.34, 1.2, 0.64, 1) ' + (i * 0.06) + 's';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        card.style.opacity = '1';
+        card.style.transform = 'perspective(600px) translateY(0) rotateX(0)';
+      });
+    });
+  });
+
+  /* ── 3D specular highlight on cards ── */
+  document.querySelectorAll('#listingCards .card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${((e.clientX - rect.left) / rect.width) * 100}%`);
+      card.style.setProperty('--my', `${((e.clientY - rect.top) / rect.height) * 100}%`);
+    });
+  });
+</script>
+{% endblock %}

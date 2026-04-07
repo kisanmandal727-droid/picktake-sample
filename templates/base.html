@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Pick&Take{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
+  {% block extra_css %}{% endblock %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="header" id="mainHeader">
+  <div class="logo"><i class="fa fa-book"></i> Pick&amp;Take</div>
+
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+
+  <div class="menu" id="navMenu">
+    <a href="{{ url_for('landing') }}" title="Back to landing page" style="opacity:0.65;"><i class="fa fa-globe"></i> Landing</a>
+    <a href="{{ url_for('home') }}"><i class="fa fa-house"></i> Home</a>
+    <a href="{{ url_for('profile', tab='saved') }}"><i class="fa fa-heart"></i> Favourite</a>
+    <a href="{{ url_for('chat') }}"><i class="fa fa-comments"></i> Chat</a>
+    <a href="{{ url_for('profile') }}"><i class="fa fa-user"></i> Profile</a>
+    {% if session.get('is_admin') %}
+      <a href="{{ url_for('admin') }}"><i class="fa fa-shield-halved"></i> Admin</a>
+    {% endif %}
+    <a href="{{ url_for('logout') }}"><i class="fa fa-right-from-bracket"></i> Logout</a>
+    <a href="{{ url_for('post_listing') }}" class="post-btn"><i class="fa fa-plus"></i> Post Listing</a>
+  </div>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for cat, msg in messages %}
+      <div class="flash flash-{{ cat }}">{{ msg }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+{% block content %}{% endblock %}
+
+<div class="footer">© 2026 Pick&amp;Take | College Marketplace</div>
+
+<script>
+/* ── Mobile Menu ── */
+function toggleMenu() {
+  const menu = document.getElementById("navMenu");
+  const btn  = document.getElementById("hamburger");
+  menu.classList.toggle("open");
+  btn.classList.toggle("open");
+}
+document.querySelectorAll(".menu a").forEach(a => {
+  a.addEventListener("click", () => {
+    document.getElementById("navMenu").classList.remove("open");
+    document.getElementById("hamburger").classList.remove("open");
+  });
+});
+
+/* ── 3D Nav Scroll Effect ── */
+const header = document.getElementById('mainHeader');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 30);
+});
+
+/* ── 3D Tilt on Cards (global) ── */
+function init3DTilt() {
+  document.querySelectorAll('.card, .user-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      card.style.transform = `perspective(600px) rotateX(${-y * 12}deg) rotateY(${x * 12}deg) translateZ(12px)`;
+      card.style.transition = 'transform 0.1s ease';
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(600px) rotateX(0) rotateY(0) translateZ(0)';
+      card.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.2, 0.64, 1)';
+    });
+  });
+}
+
+/* ── Auto-dismiss flash messages ── */
+document.querySelectorAll('.flash').forEach(flash => {
+  setTimeout(() => {
+    flash.style.opacity = '0';
+    flash.style.transform = 'translateY(-20px)';
+    flash.style.transition = 'all 0.4s ease';
+    setTimeout(() => flash.remove(), 400);
+  }, 4000);
+});
+
+/* Initialize after DOM ready */
+document.addEventListener('DOMContentLoaded', init3DTilt);
+</script>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>
